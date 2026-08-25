@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Georgia Student Planner</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">📘 Georgia Student Planner <span class="tag">prototype</span></div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="todo">To-Do List</button>
+    <button class="tab-btn" data-view="calendar">Calendar</button>
+    <button class="tab-btn" data-view="connect">Connect Accounts</button>
+  </nav>
+</header>
+
+<main>
+
+  <section id="view-connect" class="view">
+    <h1>Connect your accounts</h1>
+    <p class="sub">Canvas is a real, live connection in this prototype. The others are shown with sample data since they don't yet offer students a way to connect an app directly.</p>
+
+    <div class="card">
+      <h2>Canvas <span class="badge live">Live</span></h2>
+      <p class="muted">Paste your school's Canvas web address and a personal access token (Account → Settings → New Access Token in Canvas).</p>
+      <label>Canvas domain</label>
+      <input id="canvas-domain" type="text" placeholder="yourschool.instructure.com">
+      <label>Access token</label>
+      <input id="canvas-token" type="password" placeholder="paste your token here">
+      <button id="connect-canvas">Connect Canvas</button>
+      <p id="canvas-status" class="status"></p>
+    </div>
+
+    <div class="card">
+      <h2>Infinite Campus <span class="badge demo">Demo data</span></h2>
+      <p class="muted">Infinite Campus doesn't offer a self-serve way for students to connect outside apps — real access requires a school district partnership. Shown here with sample assignments.</p>
+    </div>
+
+    <div class="card">
+      <h2>GAVS <span class="badge demo">Demo data</span></h2>
+      <p class="muted">Same story as Infinite Campus — shown with sample data for now.</p>
+    </div>
+
+    <div class="card">
+      <h2>FVA <span class="badge demo">Demo data</span></h2>
+      <p class="muted">Same story as Infinite Campus — shown with sample data for now.</p>
+    </div>
+  </section>
+
+  <section id="view-todo" class="view hidden">
+    <h1>To-Do List</h1>
+    <p class="sub">Everything below is pulled automatically from your connected accounts, sorted by due date.</p>
+    <div id="todo-list" class="todo-list">
+      <p class="empty-state">Go to <strong>Connect Accounts</strong> and connect Canvas to see your real assignments here.</p>
+    </div>
+  </section>
+
+  <section id="view-calendar" class="view hidden">
+    <h1>Calendar</h1>
+    <div class="cal-header">
+      <button id="cal-prev">&larr;</button>
+      <span id="cal-month-label"></span>
+      <button id="cal-next">&rarr;</button>
+    </div>
+    <div id="calendar-grid" class="calendar-grid"></div>
+    <div id="day-detail" class="day-detail hidden"></div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
