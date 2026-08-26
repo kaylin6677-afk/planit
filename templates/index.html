@@ -8,68 +8,156 @@
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">📘 Georgia Student Planner <span class="tag">prototype</span></div>
-  <nav class="tabs">
-    <button class="tab-btn active" data-view="todo">To-Do List</button>
-    <button class="tab-btn" data-view="calendar">Calendar</button>
-    <button class="tab-btn" data-view="connect">Connect Accounts</button>
-  </nav>
-</header>
+<div class="app-shell">
 
-<main>
+  <aside class="sidebar">
+    <div class="brand" style="padding: 4px 4px 18px;">📘 Planner</div>
+    <nav class="side-nav">
+      <button class="side-btn active" data-view="todo">✅ To-Do</button>
+      <button class="side-btn" data-view="calendar">📅 Calendar</button>
+      <button class="side-btn" data-view="settings">⚙️ Settings</button>
+      <button class="side-btn" data-view="about">ℹ️ About Us</button>
+    </nav>
 
-  <section id="view-connect" class="view">
-    <h1>Connect your accounts</h1>
-    <p class="sub">Canvas is a real, live connection in this prototype. The others are shown with sample data since they don't yet offer students a way to connect an app directly.</p>
-
-    <div class="card">
-      <h2>Canvas <span class="badge live">Live</span></h2>
-      <p class="muted">Paste your school's Canvas web address and a personal access token (Account → Settings → New Access Token in Canvas).</p>
-      <label>Canvas domain</label>
-      <input id="canvas-domain" type="text" placeholder="yourschool.instructure.com">
-      <label>Access token</label>
-      <input id="canvas-token" type="password" placeholder="paste your token here">
-      <button id="connect-canvas">Connect Canvas</button>
-      <p id="canvas-status" class="status"></p>
+    <div class="battery-box">
+      <div class="battery-label">Today's energy</div>
+      <div class="battery-shell"><div id="battery-fill" class="battery-fill"></div></div>
+      <div id="battery-text" class="battery-text">100%</div>
     </div>
+  </aside>
 
-    <div class="card">
-      <h2>Infinite Campus <span class="badge demo">Demo data</span></h2>
-      <p class="muted">Infinite Campus doesn't offer a self-serve way for students to connect outside apps — real access requires a school district partnership. Shown here with sample assignments.</p>
+  <main class="main-area">
+
+    <!-- TO-DO VIEW -->
+    <section id="view-todo" class="view">
+      <div class="view-header">
+        <h1>To-Do List</h1>
+        <div class="segmented">
+          <button class="seg-btn active" data-scope="day">Daily</button>
+          <button class="seg-btn" data-scope="month">Monthly</button>
+        </div>
+      </div>
+
+      <div class="class-chip-row" id="class-chip-row"></div>
+
+      <button id="open-add-task" class="primary-btn">+ Add to-do</button>
+
+      <div id="recurring-section">
+        <h3 class="section-label">Daily habits</h3>
+        <div id="recurring-list" class="todo-list"></div>
+      </div>
+
+      <h3 class="section-label" id="todo-list-label">Today</h3>
+      <div id="todo-list" class="todo-list"></div>
+    </section>
+
+    <!-- CALENDAR VIEW -->
+    <section id="view-calendar" class="view hidden">
+      <h1>Calendar</h1>
+      <div class="class-chip-row" id="class-chip-row-cal"></div>
+      <div class="cal-header">
+        <button id="cal-prev">&larr;</button>
+        <span id="cal-month-label"></span>
+        <button id="cal-next">&rarr;</button>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+      <div id="day-detail" class="day-detail hidden"></div>
+    </section>
+
+    <!-- SETTINGS VIEW -->
+    <section id="view-settings" class="view hidden">
+      <h1>Settings</h1>
+
+      <div class="card">
+        <h2>Account</h2>
+        <p id="account-info" class="muted"></p>
+        <button id="logout-btn" class="secondary-btn">Log out</button>
+      </div>
+
+      <div class="card">
+        <h2>Canvas <span id="canvas-badge" class="badge demo">Not connected</span></h2>
+        <p class="muted">Paste your Canvas web address and a personal access token (Account → Settings → New Access Token in Canvas).</p>
+        <label>Canvas domain</label>
+        <input id="canvas-domain" type="text" placeholder="yourschool.instructure.com">
+        <label>Access token</label>
+        <input id="canvas-token" type="password" placeholder="paste your token here">
+        <button id="connect-canvas" class="primary-btn" style="margin-top:14px;">Connect & Sync</button>
+        <p id="canvas-status" class="status"></p>
+      </div>
+
+      <div class="card">
+        <h2>Demo platforms</h2>
+        <p class="muted">Infinite Campus, GAVS, and FVA don't offer students a self-serve way to connect an app, so these load sample data to show how it will look once that access exists.</p>
+        <button id="sync-demo" class="secondary-btn">Load demo assignments</button>
+      </div>
+
+      <div class="card">
+        <h2>Classes</h2>
+        <p class="muted">Choose a color for each class, and uncheck any you don't want showing up in your to-do list or calendar.</p>
+        <div id="settings-class-list"></div>
+      </div>
+    </section>
+
+    <!-- ABOUT US VIEW -->
+    <section id="view-about" class="view hidden">
+      <h1>About Us</h1>
+      <div class="card">
+        <p>We're a team of Georgia high school students who built this planner because we were tired of juggling due dates across Canvas, Infinite Campus, GAVS, and FVA separately.</p>
+        <p class="muted">(Replace this paragraph with your own team's story, names, and school before your competition submission.)</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Add Task Modal -->
+<div id="add-task-modal" class="modal hidden">
+  <div class="modal-card">
+    <h2>Add a to-do</h2>
+    <label>Title</label>
+    <input id="task-title" type="text" placeholder="Study for Chem test">
+    <label>Class (optional)</label>
+    <input id="task-class" type="text" list="class-options" placeholder="Chemistry">
+    <datalist id="class-options"></datalist>
+    <div class="row-2">
+      <div>
+        <label>Energy</label>
+        <select id="task-energy">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+      <div>
+        <label>Time (minutes)</label>
+        <input id="task-time" type="number" min="1" placeholder="30">
+      </div>
     </div>
-
-    <div class="card">
-      <h2>GAVS <span class="badge demo">Demo data</span></h2>
-      <p class="muted">Same story as Infinite Campus — shown with sample data for now.</p>
+    <label class="checkbox-label"><input type="checkbox" id="task-recurring"> Repeat daily (habit, no due date)</label>
+    <div id="due-date-row">
+      <label>Due date</label>
+      <input id="task-due" type="date">
     </div>
-
-    <div class="card">
-      <h2>FVA <span class="badge demo">Demo data</span></h2>
-      <p class="muted">Same story as Infinite Campus — shown with sample data for now.</p>
+    <div class="modal-actions">
+      <button id="cancel-add-task" class="secondary-btn">Cancel</button>
+      <button id="save-task" class="primary-btn">Save</button>
     </div>
-  </section>
+    <p id="add-task-error" class="status err"></p>
+  </div>
+</div>
 
-  <section id="view-todo" class="view hidden">
-    <h1>To-Do List</h1>
-    <p class="sub">Everything below is pulled automatically from your connected accounts, sorted by due date.</p>
-    <div id="todo-list" class="todo-list">
-      <p class="empty-state">Go to <strong>Connect Accounts</strong> and connect Canvas to see your real assignments here.</p>
+<!-- Focus Timer Modal -->
+<div id="timer-modal" class="modal hidden">
+  <div class="modal-card timer-card">
+    <h2 id="timer-task-title">Focus Timer</h2>
+    <div id="timer-display" class="timer-display">25:00</div>
+    <div class="modal-actions">
+      <button id="timer-start" class="primary-btn">Start</button>
+      <button id="timer-pause" class="secondary-btn hidden">Pause</button>
+      <button id="timer-close" class="secondary-btn">Close</button>
     </div>
-  </section>
-
-  <section id="view-calendar" class="view hidden">
-    <h1>Calendar</h1>
-    <div class="cal-header">
-      <button id="cal-prev">&larr;</button>
-      <span id="cal-month-label"></span>
-      <button id="cal-next">&rarr;</button>
-    </div>
-    <div id="calendar-grid" class="calendar-grid"></div>
-    <div id="day-detail" class="day-detail hidden"></div>
-  </section>
-
-</main>
+  </div>
+</div>
 
 <script src="/static/app.js"></script>
 </body>
